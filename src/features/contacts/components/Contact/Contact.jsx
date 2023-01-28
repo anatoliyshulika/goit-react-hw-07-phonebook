@@ -2,9 +2,10 @@ import PropTypes from 'prop-types';
 import { ListItem, Button } from './Contact.styled';
 import Box from 'common/components/Box/Box';
 import { useDispatch } from 'react-redux';
-import { contactRemove } from 'features/contacts/contactsSlice';
+// import { contactRemove } from 'features/contacts/contactsSlice';
+import { deleteContact } from 'features/contacts/api.operations';
 
-export default function Contact({ contact}) {
+export default function Contact({ contact }) {
   const { id, name, number } = contact;
   const dispatch = useDispatch();
 
@@ -18,7 +19,7 @@ export default function Contact({ contact}) {
         alignItems="center"
       >
         {number}
-        <Button type="button" onClick={() => dispatch(contactRemove(id))}>
+        <Button type="button" onClick={() => dispatch(deleteContact(id))}>
           Delete
         </Button>
       </Box>

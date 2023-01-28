@@ -1,12 +1,11 @@
 import { Formik, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import 'yup-phone';
-import shortid from 'shortid';
 import Box from 'common/components/Box/Box';
 import chekExistName from 'common/services/chekExistName';
 import chekExistNumber from 'common/services/chekExistNumber';
-import { getContacts } from 'app/selectors';
-import { contactAdd } from 'features/contacts/contactsSlice';
+import { selectContacts } from 'app/selectors';
+import { addContact } from 'features/contacts/api.operations';
 import { AddContactForm, Label, Input, Button } from './ContactForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -21,13 +20,12 @@ const initialValues = {
 };
 
 export default function ContactForm() {
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
 
-  function addContact(values, actions) {
+  function contactAdd(values, actions) {
     const { name, number } = values;
     const contact = {
-      id: shortid.generate(),
       name,
       number,
     };
@@ -37,7 +35,7 @@ export default function ContactForm() {
     } else if (chekExistNumber(number, contacts)) {
       window.alert('Number ' + number + ' is already in contacts');
     } else {
-      dispatch(contactAdd(contact));
+      dispatch(addContact(contact));
       actions.resetForm();
     }
   }
@@ -45,7 +43,7 @@ export default function ContactForm() {
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={addContact}
+      onSubmit={contactAdd}
       validationSchema={schema}
     >
       <AddContactForm>

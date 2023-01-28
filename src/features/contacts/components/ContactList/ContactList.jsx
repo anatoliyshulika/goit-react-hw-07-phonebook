@@ -1,23 +1,21 @@
 import { List } from './ContactList.styled';
 import Contact from '../Contact/Contact';
-import { getFilter, getContacts } from 'app/selectors';
-import { useSelector } from 'react-redux';
+import { selectFilteredContacts } from 'app/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchContacts } from 'features/contacts/api.operations';
+import { useEffect } from 'react';
 
 export default function ContactList() {
-  const contacts = useSelector(getContacts);
-  const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
-  function filteredContacts() {
-    const normalizeFilterText = filter.toLowerCase();
-
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizeFilterText)
-    );
-  };
+  const contacts = useSelector(selectFilteredContacts);
 
   return (
     <List>
-      {filteredContacts().map(contact => (
+      {contacts?.map(contact => (
         <Contact contact={contact} key={contact.id}></Contact>
       ))}
     </List>
